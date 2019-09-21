@@ -29,6 +29,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.desafio.cin.samsung.basicas.Equipamento;
@@ -45,7 +46,7 @@ public class EquipamentoResourceTest {
 	private MockMvc mvc;
 	
 	@Autowired
-	private ObjectMapper obj; 
+	private ObjectMapper mapper; 
 	
 	@Autowired
 	private EquipamentoService service;
@@ -53,10 +54,12 @@ public class EquipamentoResourceTest {
 	@Before
 	public void setup() {
 		this.mvc = MockMvcBuilders.webAppContextSetup(context).build();
+		mapper.setVisibility(mapper.getVisibilityChecker()
+			     .withFieldVisibility(Visibility.ANY));
 	}
 	
 	@Test
-	public void testaCreateSucesso() throws Exception {
+	public void testaCreateSucesso() {
 		String url = "/api/equipamento/criar";
 		
 		File file = new File("https://cdn-motorshow-ssl.akamaized.net/wp-content/uploads/sites/2/2018/05/4_ms416_volkswagen-fox-xtreme1-747x420.jpg");
@@ -64,10 +67,15 @@ public class EquipamentoResourceTest {
 				"Fox Xtreme2019", 
 				DateTimeFormatter.ofPattern("MM/yyyy").format(LocalDate.now()), 
 				Double.valueOf(100000), file);
-		String json = obj.writeValueAsString(equipamento);
-		 mvc.perform(post(url)
-			    .contentType(MediaType.APPLICATION_JSON)
-			    .content(json)).andExpect(status().isOk());
+		String json = null;
+		 try {
+			 json = mapper.writeValueAsString(equipamento);
+			mvc.perform(post(url)
+				    .contentType(MediaType.APPLICATION_JSON)
+				    .content(json)).andExpect(status().isOk());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Test
@@ -78,7 +86,7 @@ public class EquipamentoResourceTest {
 				"Fox Xtreme2019", 
 				DateTimeFormatter.ofPattern("MM/yyyy").format(LocalDate.now()), 
 				Double.valueOf(100000), null);
-		String json = obj.writeValueAsString(equipamento);
+		String json = mapper.writeValueAsString(equipamento);
 		 mvc.perform(post(url)
 			    .contentType(MediaType.APPLICATION_JSON)
 			    .content(json)).andExpect(status().isBadRequest());
@@ -92,7 +100,7 @@ public class EquipamentoResourceTest {
 		List<Equipamento> equipamentos = service.findAll(0, 10).getContent();
 		Equipamento equipamento = equipamentos.get(equipamentos.size()-1);
 		equipamento.setFoto(file);
-		String json = obj.writeValueAsString(equipamento);
+		String json = mapper.writeValueAsString(equipamento);
 		 mvc.perform(put(url)
 			    .contentType(MediaType.APPLICATION_JSON)
 			    .content(json)).andExpect(status().isOk());
@@ -105,7 +113,7 @@ public class EquipamentoResourceTest {
 		List<Equipamento> equipamentos = service.findAll(0, 10).getContent();
 		Equipamento equipamento = equipamentos.get(equipamentos.size()-1);
 		equipamento.setMesano(null);
-		String json = obj.writeValueAsString(equipamento);
+		String json = mapper.writeValueAsString(equipamento);
 		 mvc.perform(put(url)
 			    .contentType(MediaType.APPLICATION_JSON)
 			    .content(json)).andExpect(status().isBadRequest());

@@ -1,8 +1,7 @@
 package br.com.desafio.cin.samsung.controles;
 
-import java.io.ByteArrayOutputStream;
+import javax.swing.ImageIcon;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -26,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.desafio.cin.samsung.basicas.Equipamento;
+import br.com.desafio.cin.samsung.constantes.Constantes;
 import br.com.desafio.cin.samsung.controles.response.Response;
 import br.com.desafio.cin.samsung.servicos.EquipamentoService;
 import br.com.desafio.cin.samsung.utils.QrCode;
@@ -53,8 +53,9 @@ public class EquipamentoController {
 			}
 
 			gerarQrCode(equipamento);
-			
+			ImageIcon qrCode = QrCode.lerImagem(new File(Constantes.QRCODE_PATH));
 			Equipamento newEquipamento = equipamentoService.createOrUpdate(equipamento);
+			newEquipamento.setQrcode(qrCode);
 			response.setData(newEquipamento);
 
 		} catch (Exception e) {
@@ -63,17 +64,14 @@ public class EquipamentoController {
 		return ResponseEntity.ok(response);
 	}
 
-	private FileOutputStream gerarQrCode(Equipamento equipamento) {
+	private void gerarQrCode(Equipamento equipamento) {
 		ObjectMapper Obj = new ObjectMapper();
 		int tamanho = 125;
-		FileOutputStream qrcode = null;
 		try {
-			qrcode = QrCode.criarQRCode(Obj.writeValueAsString(equipamento), tamanho);
+			QrCode.criarQRCode(Obj.writeValueAsString(equipamento), tamanho);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		return qrcode;
 	}
 
 	private void validateComun(Equipamento equipamento, BindingResult result) {
@@ -116,8 +114,9 @@ public class EquipamentoController {
 			}
 
 			gerarQrCode(equipamento);
-
+			ImageIcon qrCode = QrCode.lerImagem(new File(Constantes.QRCODE_PATH));
 			Equipamento equipamentoUpdated = equipamentoService.createOrUpdate(equipamento);
+			equipamentoUpdated.setQrcode(qrCode);
 			Response.setData(equipamentoUpdated);
 
 		} catch (Exception e) {

@@ -57,8 +57,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- <dependency> <groupId>com.google.zxing</groupId> <artifactId>core</artifactId> 
-			<version>3.3.3</version> </dependency> -->
 		<dependency>
 			<groupId>net.glxn</groupId>
 			<artifactId>qrgen</artifactId>

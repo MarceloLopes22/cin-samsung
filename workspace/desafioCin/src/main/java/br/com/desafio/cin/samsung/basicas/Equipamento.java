@@ -1,7 +1,6 @@
 package br.com.desafio.cin.samsung.basicas;
 
 import java.io.File;
-import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.swing.ImageIcon;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -23,9 +23,7 @@ import br.com.desafio.cin.samsung.enums.TipoEquipamento;
 
 @Entity
 @Table(name = "Equipamento", schema = "cin")
-public class Equipamento implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class Equipamento {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
@@ -58,7 +56,7 @@ public class Equipamento implements Serializable {
 	private File foto;
 
 	@Transient
-	private File qrcode;
+	private ImageIcon qrcode;
 
 	public Equipamento() {
 	}
@@ -119,11 +117,11 @@ public class Equipamento implements Serializable {
 		this.foto = foto;
 	}
 
-	public File getQrcode() {
+	public ImageIcon getQrcode() {
 		return qrcode;
 	}
 
-	public void setQrcode(File qrcode) {
+	public void setQrcode(ImageIcon qrcode) {
 		this.qrcode = qrcode;
 	}
 

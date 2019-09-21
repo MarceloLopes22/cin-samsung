@@ -4,11 +4,10 @@ use cin;
 
 CREATE TABLE Equipamento (
   idEquipamento BIGINT NOT NULL AUTO_INCREMENT,
-  tipo INTEGER NOT NULL,
+  tipo VARCHAR(255) NOT NULL,
   modelo VARCHAR(255) NOT NULL,
   mesano DATE NOT NULL,
   valor DECIMAL NOT NULL,
-  foto LONGBLOB NOT NULL,
-  qrcode LONGBLOB NULL,
+  foto LONGBLOB NULL,
   PRIMARY KEY(idEquipamento)
 );

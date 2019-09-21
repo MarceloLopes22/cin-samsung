@@ -2,7 +2,6 @@ package br.com.desafio.cin.samsung.basicas;
 
 import java.io.File;
 import java.io.Serializable;
-import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,13 +11,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import br.com.desafio.cin.samsung.enums.TipoEquipamento;
 
@@ -29,7 +28,7 @@ public class Equipamento implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "native")
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
 	@GenericGenerator(name = "native", strategy = "native")
 	@Column(name = "id_equipamento", updatable = false, nullable = false)
 	private Long id_equipamento;
@@ -47,9 +46,8 @@ public class Equipamento implements Serializable {
 	private String modelo;
 
 	@Column(columnDefinition = "mesano")
-	@DateTimeFormat(pattern = "MM/yyyy")
 	@NotNull(message = "mês ano é obrigatório")
-	private LocalDate mesano;
+	private String mesano;
 
 	@Column(name = "valor")
 	@NotNull(message = "valor é obrigatório")
@@ -59,17 +57,16 @@ public class Equipamento implements Serializable {
 	@NotNull(message = "foto é obrigatório")
 	private File foto;
 
-	/*
-	 * @Column(name = "qrcode") private File qrcode;
-	 */
+	@Transient
+	private File qrcode;
 
 	public Equipamento() {
 	}
 
-	public Equipamento(TipoEquipamento tipo, String modelo, LocalDate mesano, Double valor, File foto) {
+	public Equipamento(TipoEquipamento tipo, String modelo, String yearMonth, Double valor, File foto) {
 		this.tipo = tipo;
 		this.modelo = modelo;
-		this.mesano = mesano;
+		this.mesano = yearMonth;
 		this.valor = valor;
 		this.foto = foto;
 	}
@@ -98,11 +95,11 @@ public class Equipamento implements Serializable {
 		this.modelo = modelo;
 	}
 
-	public LocalDate getMesano() {
+	public String getMesano() {
 		return mesano;
 	}
 
-	public void setMesano(LocalDate mesano) {
+	public void setMesano(String mesano) {
 		this.mesano = mesano;
 	}
 
@@ -121,9 +118,13 @@ public class Equipamento implements Serializable {
 	public void setFoto(File foto) {
 		this.foto = foto;
 	}
-	/*
-	 * public File getQrcode() { return qrcode; }
-	 * 
-	 * public void setQrcode(File qrcode) { this.qrcode = qrcode; }
-	 */
+
+	public File getQrcode() {
+		return qrcode;
+	}
+
+	public void setQrcode(File qrcode) {
+		this.qrcode = qrcode;
+	}
+
 }

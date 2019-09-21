@@ -1,5 +1,7 @@
 package br.com.desafio.cin.samsung.servicos.impl;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,8 +24,8 @@ public class EquipamentoServiceImpl implements EquipamentoService {
 	}
 
 	@Override
-	public Equipamento findByIdEquipamento(Long idEquipamento) {
-		return this.repo.findById(idEquipamento).get();
+	public Optional<Equipamento> findByIdEquipamento(Long idEquipamento) {
+		return this.repo.findById(idEquipamento);
 	}
 
 	@Override

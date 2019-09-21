@@ -3,11 +3,11 @@ CREATE SCHEMA cin DEFAULT CHARACTER SET utf8 ;
 use cin;
 
 CREATE TABLE Equipamento (
-  idEquipamento BIGINT NOT NULL AUTO_INCREMENT,
-  tipo VARCHAR(255) NOT NULL,
+  id_equipamento BIGINT NOT NULL AUTO_INCREMENT,
+  tipo VARCHAR(100) NOT NULL,
   modelo VARCHAR(255) NOT NULL,
-  mesano DATE NOT NULL,
+  mesano VARCHAR(20) NOT NULL,
   valor DECIMAL NOT NULL,
-  foto LONGBLOB NULL,
-  PRIMARY KEY(idEquipamento)
+  foto LONGBLOB NOT NULL,
+  PRIMARY KEY(id_equipamento)
 );

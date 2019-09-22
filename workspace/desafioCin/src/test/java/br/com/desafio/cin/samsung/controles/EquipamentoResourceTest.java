@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -35,6 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import br.com.desafio.cin.samsung.basicas.Equipamento;
 import br.com.desafio.cin.samsung.enums.TipoEquipamento;
 import br.com.desafio.cin.samsung.servicos.EquipamentoService;
+import br.com.desafio.cin.samsung.utils.Calcular;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -50,6 +52,9 @@ public class EquipamentoResourceTest {
 	
 	@Autowired
 	private EquipamentoService service;
+	
+	@Autowired
+	private Environment env;
 	
 	@Before
 	public void setup() {
@@ -186,6 +191,16 @@ public class EquipamentoResourceTest {
 		MvcResult andReturn = this.mvc.perform(get("/api/equipamento/0/0"))
 		.andExpect(status().isBadRequest()).andReturn();
 		andReturn.getResponse().getContentAsString().contains("Falha na paginação");
+	}
+		
+	@Test
+	public void testCalcularValorDepreciadoDoProduto() throws Exception {
+		List<Equipamento> lista = service.findAll(0, 10).getContent();
+		Equipamento equipamento = lista.get(lista.size()-1);
+		
+		String valorDepreciadoDoProduto = Calcular.calcularValorDepreciadoDoProduto(equipamento, new Double(env.getProperty("depreciacao")));
+		
+		assertEquals(valorDepreciadoDoProduto, equipamento.getValorDepreciado());
 	}
 	
 

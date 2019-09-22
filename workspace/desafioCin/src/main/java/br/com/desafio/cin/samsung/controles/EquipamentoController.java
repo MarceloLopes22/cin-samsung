@@ -5,18 +5,12 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.Properties;
 
-import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
-import org.hibernate.internal.SessionImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
@@ -45,6 +39,7 @@ import br.com.desafio.cin.samsung.basicas.Equipamento;
 import br.com.desafio.cin.samsung.constantes.Constantes;
 import br.com.desafio.cin.samsung.controles.response.Response;
 import br.com.desafio.cin.samsung.servicos.EquipamentoService;
+import br.com.desafio.cin.samsung.utils.Calcular;
 import br.com.desafio.cin.samsung.utils.EquipamentoJson;
 import br.com.desafio.cin.samsung.utils.QrCode;
 
@@ -164,10 +159,9 @@ public class EquipamentoController {
 			}
 
 			Equipamento equipamentoUpdated = equipamentoService.createOrUpdate(equipamento);
-			// gerarQrCode(equipamentoUpdated);
-			// ImageIcon qrCode = QrCode.lerImagem(new File(Constantes.QRCODE_PATH));
+			gerarQrCode(equipamentoUpdated);
 			equipamentoUpdated.setQrcode(new File(Constantes.QRCODE_PATH));
-			this.sendEmail(equipamentoUpdated.getQrcode());
+			//this.sendEmail(equipamentoUpdated.getQrcode());
 			Response.setData(equipamentoUpdated);
 
 		} catch (Exception e) {
@@ -194,12 +188,9 @@ public class EquipamentoController {
 			response.getErros().add("Equipamento não encontrado. IdEquipamento = " + idEquipamento);
 			return ResponseEntity.badRequest().body(response);
 		}
-		Equipamento data = equipamento.get();
-		// Date date = new Date(data.getMesano());
-		// DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM");
-
-		// data.setMesano(data.toString());
-		response.setData(data);
+		Equipamento equipamentoConsultado = equipamento.get();
+		Calcular.calcularValorDepreciadoDoProduto(equipamentoConsultado, new Double(env.getProperty("depreciacao")));
+		response.setData(equipamentoConsultado);
 		return ResponseEntity.ok().body(response);
 	}
 

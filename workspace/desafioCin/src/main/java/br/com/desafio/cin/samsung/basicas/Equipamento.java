@@ -12,13 +12,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.swing.ImageIcon;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
@@ -50,6 +50,7 @@ public class Equipamento implements Serializable {
 	public String modelo;
 
 	@Column(columnDefinition = "mesano")
+	@DateTimeFormat(pattern = "yyyy/MM")
 	@NotNull(message = "mês ano é obrigatório")
 	public String mesano;
 
@@ -63,6 +64,9 @@ public class Equipamento implements Serializable {
 
 	@Transient
 	public File qrcode;
+	
+	@Transient
+	public String valorDepreciado;
 
 	public Equipamento() {
 	}
@@ -130,5 +134,12 @@ public class Equipamento implements Serializable {
 	public void setQrcode(File qrcode) {
 		this.qrcode = qrcode;
 	}
-	
+
+	public String getValorDepreciado() {
+		return valorDepreciado;
+	}
+
+	public void setValorDepreciado(String valorDepreciado) {
+		this.valorDepreciado = valorDepreciado;
+	}
 }

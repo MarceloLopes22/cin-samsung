@@ -24,6 +24,7 @@ import {
   MatNativeDateModule,
   MatInputModule
 } from '@angular/material';
+import { EquipamentoDetalheComponent } from './components/equipamento-detalhe/equipamento-detalhe.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import {
     HomeComponent,
     EquipamentoListaComponent,
     EquipamentoNovoComponent,
+    EquipamentoDetalheComponent,
   ],
   imports: [
     //BrowserModule,

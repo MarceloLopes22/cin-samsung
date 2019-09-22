@@ -1,6 +1,7 @@
 package br.com.desafio.cin.samsung.basicas;
 
 import java.io.File;
+import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,44 +20,49 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
 import br.com.desafio.cin.samsung.enums.TipoEquipamento;
 
 @Entity
 @Table(name = "Equipamento", schema = "cin")
-public class Equipamento {
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+public class Equipamento implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
 	@GenericGenerator(name = "native", strategy = "native")
 	@Column(name = "id_equipamento", updatable = false, nullable = false)
-	private Long id_equipamento;
+	public Long id_equipamento;
 
 	@Column(name = "tipo")
 	@Enumerated(EnumType.STRING)
 	@NotNull(message = "tipo é obrigatório")
-	private TipoEquipamento tipo;
+	public TipoEquipamento tipo;
 
 	@NotNull(message = "modelo é obrigatório")
 	@NotBlank(message = "modelo é obrigatório")
 	@NotEmpty(message = "modelo é obrigatório")
 	@Column(name = "modelo")
 	@Size(max = 255)
-	private String modelo;
+	public String modelo;
 
 	@Column(columnDefinition = "mesano")
 	@NotNull(message = "mês ano é obrigatório")
-	private String mesano;
+	public String mesano;
 
 	@Column(name = "valor")
 	@NotNull(message = "valor é obrigatório")
-	private Double valor;
+	public Double valor;
 
 	@Column(name = "foto")
 	@NotNull(message = "foto é obrigatório")
-	private File foto;
+	public File foto;
 
 	@Transient
-	private ImageIcon qrcode;
+	public File qrcode;
 
 	public Equipamento() {
 	}
@@ -117,12 +123,12 @@ public class Equipamento {
 		this.foto = foto;
 	}
 
-	public ImageIcon getQrcode() {
+	public File getQrcode() {
 		return qrcode;
 	}
 
-	public void setQrcode(ImageIcon qrcode) {
+	public void setQrcode(File qrcode) {
 		this.qrcode = qrcode;
 	}
-
+	
 }

@@ -1,8 +1,9 @@
 package br.com.desafio.cin.samsung.controles;
 
-import javax.swing.ImageIcon;
 import java.io.File;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,12 +23,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import br.com.desafio.cin.samsung.basicas.Equipamento;
 import br.com.desafio.cin.samsung.constantes.Constantes;
 import br.com.desafio.cin.samsung.controles.response.Response;
 import br.com.desafio.cin.samsung.servicos.EquipamentoService;
+import br.com.desafio.cin.samsung.utils.EquipamentoJson;
 import br.com.desafio.cin.samsung.utils.QrCode;
 
 @RestController
@@ -37,7 +42,10 @@ public class EquipamentoController {
 
 	@Autowired
 	private EquipamentoService equipamentoService;
-
+	
+	@Autowired
+	private ObjectMapper mapper; 
+	
 	@PostMapping(value = "criar")
 	public ResponseEntity<Response<Equipamento>> create(HttpServletRequest request,
 			@RequestBody Equipamento equipamento, BindingResult result) {
@@ -51,11 +59,11 @@ public class EquipamentoController {
 				result.getAllErrors().forEach(erro -> response.getErros().add(erro.getDefaultMessage()));
 				return ResponseEntity.badRequest().body(response);
 			}
-
-			gerarQrCode(equipamento);
-			ImageIcon qrCode = QrCode.lerImagem(new File(Constantes.QRCODE_PATH));
+			equipamento.setFoto(equipamento.getFoto().getAbsoluteFile());
 			Equipamento newEquipamento = equipamentoService.createOrUpdate(equipamento);
-			newEquipamento.setQrcode(qrCode);
+			gerarQrCode(newEquipamento);
+			//ImageIcon qrCode = QrCode.lerImagem(new File(Constantes.QRCODE_PATH));
+			newEquipamento.setQrcode(new File(Constantes.QRCODE_PATH));
 			response.setData(newEquipamento);
 
 		} catch (Exception e) {
@@ -65,13 +73,26 @@ public class EquipamentoController {
 	}
 
 	private void gerarQrCode(Equipamento equipamento) {
-		ObjectMapper Obj = new ObjectMapper();
+		mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		int tamanho = 125;
 		try {
-			QrCode.criarQRCode(Obj.writeValueAsString(equipamento), tamanho);
+			EquipamentoJson toEquipamentoJson = parseEquipamentoToEquipamentoJson(equipamento);
+			QrCode.criarQRCode(mapper.writeValueAsString(toEquipamentoJson), tamanho);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private EquipamentoJson parseEquipamentoToEquipamentoJson(Equipamento equipamento) {
+		EquipamentoJson json = new EquipamentoJson();
+		json.setId_equipamento(equipamento.getId_equipamento());
+		json.setMesano(equipamento.getMesano());
+		json.setModelo(equipamento.getModelo());
+		json.setTipo(equipamento.getTipo());
+		json.setValor(equipamento.getValor());
+		
+		return json;
 	}
 
 	private void validateComun(Equipamento equipamento, BindingResult result) {
@@ -113,10 +134,10 @@ public class EquipamentoController {
 				return ResponseEntity.badRequest().body(Response);
 			}
 
-			gerarQrCode(equipamento);
-			ImageIcon qrCode = QrCode.lerImagem(new File(Constantes.QRCODE_PATH));
 			Equipamento equipamentoUpdated = equipamentoService.createOrUpdate(equipamento);
-			equipamentoUpdated.setQrcode(qrCode);
+			//gerarQrCode(equipamentoUpdated);
+			//ImageIcon qrCode = QrCode.lerImagem(new File(Constantes.QRCODE_PATH));
+			equipamentoUpdated.setQrcode(new File(Constantes.QRCODE_PATH));
 			Response.setData(equipamentoUpdated);
 
 		} catch (Exception e) {
@@ -143,7 +164,12 @@ public class EquipamentoController {
 			response.getErros().add("Equipamento não encontrado. IdEquipamento = " + idEquipamento);
 			return ResponseEntity.badRequest().body(response);
 		}
-		response.setData(equipamento.get());
+		Equipamento data = equipamento.get();
+		//Date date = new Date(data.getMesano());
+		//DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM");
+		
+		//data.setMesano(data.toString());
+		response.setData(data);
 		return ResponseEntity.ok().body(response);
 	}
 

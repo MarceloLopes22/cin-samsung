@@ -18,7 +18,6 @@ public class QrCode {
 
 	public static void criarQRCode(String texto, int tamanho) throws IOException {
 		
-		//URL systemResource = ClassLoader.getSystemResource("./../../../resources/img/imagem.png");
 		File file = new File(Constantes.QRCODE_PATH);
 		FileOutputStream qrcode = new FileOutputStream(file);
 		ByteArrayOutputStream arrayOutputStream = QRCode.from(texto).to(ImageType.PNG).withSize(tamanho, tamanho)
@@ -36,10 +35,7 @@ public class QrCode {
 	}
 	
 	public static ImageIcon lerImagem(File file) {
-		// read image from folder
-        //File folderInput = new File("/src/imgs/qrCode.png");
 		ImageIcon image = new ImageIcon(file.getPath());
-        //BufferedImage folderImage = ImageIO.read(folderInput);
         return image;
 	}
 	

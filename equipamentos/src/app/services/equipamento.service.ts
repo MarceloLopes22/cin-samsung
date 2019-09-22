@@ -10,9 +10,9 @@ export class EquipamentoService {
 
   createOrUpdate(equipamento: Equipamento) {
     if(equipamento.id_equipamento != null && equipamento.id_equipamento > 0) {
-      return this.http.post(`${EQUIPAMENTO_API}/api/equipamento/atualizar`, equipamento);
+      return this.http.put(`${EQUIPAMENTO_API}/api/equipamento/atualizar`, equipamento);
     }
-    return this.http.put(`${EQUIPAMENTO_API}/api/equipamento/criar`, equipamento);
+    return this.http.post(`${EQUIPAMENTO_API}/api/equipamento/criar`, equipamento);
   }
 
   findAll(page:number, count: number) {

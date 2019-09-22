@@ -5,7 +5,7 @@ public enum TipoEquipamento {
 	ELETRONICO("ELETRONICO"),
     DOMESTICO("DOMESTICO"),
     AUTOMOTIVO("AUTOMOTIVO"),
-    CONSTRUCAO("CONSTRUÇÃO");
+    CONSTRUCAO("CONSTRUCAO");
 	
 	private String nome;
 	

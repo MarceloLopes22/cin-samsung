@@ -1,6 +1,7 @@
-export enum TipoEquipamentoEnum{
+export enum TipoEquipamento {
+
     ELETRONICO = "ELETRONICO",
     DOMESTICO = "DOMESTICO",
     AUTOMOTIVO = "AUTOMOTIVO",
-    CONSTRUCAO = "CONSTRUÇÃO"
+    CONSTRUCAO = "CONSTRUCAO"
 }

@@ -129,14 +129,14 @@ public class EquipamentoResourceTest {
 		
 		this.mvc.perform(get(url))
 		.andExpect(status().isOk())
-		.andExpect(jsonPath("$.data.idEquipamento", is(equipamento.getId_equipamento().intValue())));
+		.andExpect(jsonPath("$.data.id_equipamento", is(equipamento.getId_equipamento().intValue())));
 	}
 	
 	@Test
 	public void testaFindByIdFalha() throws Exception {
 		String url = "/api/equipamento/";
 		
-		List<Equipamento> list = service.findAll(0, 10).getContent();
+		List<Equipamento> list = service.findAll(0, 10000).getContent();
 		Equipamento equipamento = list.get(list.size()-1);
 		Long naoExiste = equipamento.getId_equipamento() + 1;
 		url = url.concat(naoExiste.toString());

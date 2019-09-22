@@ -13,7 +13,7 @@ export class EquipamentoListaComponent implements OnInit {
   page:number = 0;
   count:number = 5;
   pages:Array<number>;
-  message: {};
+  menssage: {type: string, text: string};
   classCss: {};
   listaEquipamentos = [];
 
@@ -48,7 +48,6 @@ export class EquipamentoListaComponent implements OnInit {
     this.dialogService.confirm("Você quer deletar esse equipamento?")
     .then((canDelete:boolean) =>{
       if(canDelete) {
-        this.message = {};
         this.equipamentoService.delete(id).subscribe((responseApi: ResponseApi) =>{
           this.showMessage({
             type: 'success',
@@ -92,10 +91,10 @@ export class EquipamentoListaComponent implements OnInit {
   }
 
   private showMessage(message: {type: string, text: string}) : void {
-    this.message = message;
+    this.menssage = message;
     this.buildClasses(message.type);
     setTimeout(()=>{
-      this.message = undefined;
+      this.menssage = undefined;
     }, 3000);
   }
 

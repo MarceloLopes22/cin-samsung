@@ -1,12 +1,12 @@
-import { TipoEquipamentoEnum } from './enums/TipoEquipamentoEnum';
+import { TipoEquipamento } from './enums/TipoEquipamento';
 
 export class Equipamento {
 
     constructor(public id_equipamento:number,
-                public tipoEquipamentoEnum:TipoEquipamentoEnum,
+                public tipo:TipoEquipamento,
                 public modelo: string,
                 public mesano: string,
                 public valor: number,
-                public foto: File,
-                public qrcode: File){}
+                public foto: any,
+                public qrcode: any){}
 }

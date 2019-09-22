@@ -4,7 +4,8 @@ import { Equipamento } from 'src/app/model/equipamento.model';
 import { EquipamentoService } from 'src/app/services/equipamento.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResponseApi } from 'src/app/model/responseApi.model';
-import { TipoEquipamentoEnum } from 'src/app/model/enums/TipoEquipamentoEnum';
+import { TipoEquipamento } from 'src/app/model/enums/TipoEquipamento';
+//import {  FileUploader, FileSelectDirective, FileItem } from 'ng2-file-upload/ng2-file-upload';
 
 @Component({
   selector: 'app-equipamento-novo',
@@ -14,35 +15,39 @@ export class EquipamentoNovoComponent implements OnInit {
 
   @ViewChild("form", {static: true}) form: NgForm;
 
-  equipamento = new Equipamento(null, null, '', '', null, null, null);
-  menssage: {}
+  startDate = new Date(1990, 0, 1);
+  equipamento = new Equipamento(0, null, '', null, 0.00, null, null);
+  menssage: {type: string, text: string};
   classCss: {}
   tipos = new Array<string>();
+
+  ngAfterViewInit() {
+  }
   
+  //uploader: FileUploader = new FileUploader({ url: "equipamento.foto", removeAfterUpload: false, autoUpload: true });
+
   constructor(private equipamentoService: EquipamentoService,
     private activatedRoute: ActivatedRoute,
-    private router: Router) { }
+    private router: Router) { 
+      //this.tipos =  Object.keys(TipoEquipamento);
+      
+    }
 
   ngOnInit() {
     let id: number = this.activatedRoute.snapshot.params['id'];
     if(id != undefined){
       this.findById(id);
     }
-    this.tipos =  Object.keys(TipoEquipamentoEnum);
+    this.tipos = Object.keys(TipoEquipamento);
   }
 
   save(){
-    this.menssage = {};
     this.equipamentoService.createOrUpdate(this.equipamento).subscribe((responseApi: ResponseApi) => {
-      //this.equipamento = new Equipamento(null, null, '', '', null, null, null);
-      //let notificationRet: Equipamento = responseApi.data;
       this.equipamento = responseApi.data;
-      this.form.resetForm();
       this.showMessage({
         type: 'success',
         text: `Equipamento registrado ${this.equipamento.modelo} com sucesso`
       });
-      this.router.navigate(['/list-notification']);
     }, err =>{
       this.showMessage({
         type: 'error',
@@ -54,6 +59,9 @@ export class EquipamentoNovoComponent implements OnInit {
   findById(id: number) {
     this.equipamentoService.findById(id).subscribe((responseApi: ResponseApi) =>{
       this.equipamento = responseApi.data;
+      //this.uploader.uploadItem(new FileItem(this.uploader, this.equipamento.foto, this.uploader.autoUpload));
+      //this.uploader.setOptions(this.equipamento.foto);
+      //this.form.controls.foto.setValue(this.equipamento.foto);
     }, err =>{
       this.showMessage({
         type: 'error',
@@ -77,7 +85,7 @@ export class EquipamentoNovoComponent implements OnInit {
     this.classCss['alert-'+type] = true;
   }
 
-  getFormGroupClass(isInvalid: boolean, isDirty): {} {
+  getFormGroupClass(isInvalid: boolean, isDirty: boolean): {} {
     return {
       'form-group': true,
       'has-error': isInvalid && isDirty,
@@ -85,4 +93,17 @@ export class EquipamentoNovoComponent implements OnInit {
     };
   }
 
+  onFileChange($event) {
+    let file = $event.target.files[0]; // <--- File Object for future use.
+    this.form.controls['inputFoto'].setValue(file ? file.name : ''); // <-- Set Value for Validation
+  }
+
+  fileChanged(e) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.equipamento.foto = reader.result;
+    };
+    reader.readAsText(e.target.files[0]);
+    console.log(e.target.files[0]);
+  }
 }

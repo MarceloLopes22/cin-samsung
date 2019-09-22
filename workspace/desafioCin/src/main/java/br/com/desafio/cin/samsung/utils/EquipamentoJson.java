@@ -1,0 +1,64 @@
+package br.com.desafio.cin.samsung.utils;
+
+import br.com.desafio.cin.samsung.enums.TipoEquipamento;
+
+public class EquipamentoJson {
+
+	public Long id_equipamento;
+	public TipoEquipamento tipo;
+	public String modelo;
+	public String mesano;
+	public Double valor;
+	
+	public EquipamentoJson() {
+	}
+	
+	public EquipamentoJson(Long id_equipamento, TipoEquipamento tipo, String modelo, String mesano, Double valor) {
+		super();
+		this.id_equipamento = id_equipamento;
+		this.tipo = tipo;
+		this.modelo = modelo;
+		this.mesano = mesano;
+		this.valor = valor;
+	}
+
+	public Long getId_equipamento() {
+		return id_equipamento;
+	}
+
+	public void setId_equipamento(Long id_equipamento) {
+		this.id_equipamento = id_equipamento;
+	}
+
+	public TipoEquipamento getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(TipoEquipamento tipo) {
+		this.tipo = tipo;
+	}
+
+	public String getModelo() {
+		return modelo;
+	}
+
+	public void setModelo(String modelo) {
+		this.modelo = modelo;
+	}
+
+	public String getMesano() {
+		return mesano;
+	}
+
+	public void setMesano(String mesano) {
+		this.mesano = mesano;
+	}
+
+	public Double getValor() {
+		return valor;
+	}
+
+	public void setValor(Double valor) {
+		this.valor = valor;
+	}
+}

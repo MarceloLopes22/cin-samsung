@@ -1,0 +1,6 @@
+export enum TipoEquipamentoEnum{
+    ELETRONICO = "ELETRONICO",
+    DOMESTICO = "DOMESTICO",
+    AUTOMOTIVO = "AUTOMOTIVO",
+    CONSTRUCAO = "CONSTRUÇÃO"
+}

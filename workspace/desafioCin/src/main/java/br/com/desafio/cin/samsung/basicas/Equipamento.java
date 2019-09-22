@@ -69,12 +69,12 @@ public class Equipamento {
 		this.foto = foto;
 	}
 
-	public Long getIdEquipamento() {
+	public Long getId_equipamento() {
 		return id_equipamento;
 	}
 
-	public void setIdEquipamento(Long idEquipamento) {
-		this.id_equipamento = idEquipamento;
+	public void setId_equipamento(Long id_equipamento) {
+		this.id_equipamento = id_equipamento;
 	}
 
 	public TipoEquipamento getTipo() {

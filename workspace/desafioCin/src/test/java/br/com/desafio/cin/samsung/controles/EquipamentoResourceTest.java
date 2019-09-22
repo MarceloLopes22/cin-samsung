@@ -125,11 +125,11 @@ public class EquipamentoResourceTest {
 		
 		List<Equipamento> list = service.findAll(0, 10).getContent();
 		Equipamento equipamento = list.get(list.size()-1);
-		url = url.concat(equipamento.getIdEquipamento().toString());
+		url = url.concat(equipamento.getId_equipamento().toString());
 		
 		this.mvc.perform(get(url))
 		.andExpect(status().isOk())
-		.andExpect(jsonPath("$.data.idEquipamento", is(equipamento.getIdEquipamento().intValue())));
+		.andExpect(jsonPath("$.data.idEquipamento", is(equipamento.getId_equipamento().intValue())));
 	}
 	
 	@Test
@@ -138,7 +138,7 @@ public class EquipamentoResourceTest {
 		
 		List<Equipamento> list = service.findAll(0, 10).getContent();
 		Equipamento equipamento = list.get(list.size()-1);
-		Long naoExiste = equipamento.getIdEquipamento() + 1;
+		Long naoExiste = equipamento.getId_equipamento() + 1;
 		url = url.concat(naoExiste.toString());
 		
 		this.mvc.perform(get(url))
@@ -151,12 +151,12 @@ public class EquipamentoResourceTest {
 		
 		List<Equipamento> lista = service.findAll(0, 10).getContent();
 		Equipamento equipamento = lista.get(lista.size()-1);
-		url = url.concat(equipamento.getIdEquipamento().toString());
+		url = url.concat(equipamento.getId_equipamento().toString());
 		
 		this.mvc.perform(delete(url))
 		.andExpect(status().isOk());
 		
-		Optional<Equipamento> findByIdEquipamento = service.findByIdEquipamento(equipamento.getIdEquipamento());
+		Optional<Equipamento> findByIdEquipamento = service.findByIdEquipamento(equipamento.getId_equipamento());
 		
 		assertEquals(Boolean.FALSE, findByIdEquipamento.isPresent());
 	}

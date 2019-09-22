@@ -128,7 +128,7 @@ public class EquipamentoController {
 
 	private void validateUpdate(Equipamento Equipamento, BindingResult result) {
 
-		if (Equipamento.getIdEquipamento() == null) {
+		if (Equipamento.getId_equipamento() == null) {
 			result.addError(new ObjectError(Equipamento.class.getSimpleName(), "Id Equipamento é obrigatório."));
 		}
 	}

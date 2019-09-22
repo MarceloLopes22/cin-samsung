@@ -3,9 +3,9 @@ package br.com.desafio.cin.samsung.enums;
 public enum TipoEquipamento {
 
 	ELETRONICO("ELETRONICO"),
-    DOMESTICO("ELETRICO"),
+    DOMESTICO("DOMESTICO"),
     AUTOMOTIVO("AUTOMOTIVO"),
-    CONSTRUCAO("CONSTRUCAO");
+    CONSTRUCAO("CONSTRUÇÃO");
 	
 	private String nome;
 	

@@ -2,15 +2,28 @@ package br.com.desafio.cin.samsung.controles;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Optional;
+import java.util.Properties;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
+import org.hibernate.internal.SessionImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -42,10 +55,25 @@ public class EquipamentoController {
 
 	@Autowired
 	private EquipamentoService equipamentoService;
-	
+
 	@Autowired
-	private ObjectMapper mapper; 
-	
+	private ObjectMapper mapper;
+
+	@Autowired(required = true)
+	private JavaMailSender mailSender;
+
+	@Autowired
+	private Environment env;
+	/*
+	 * @Autowired(required = true) private Session session;
+	 */
+
+	/*
+	 * @Bean public void setMailSender(JavaMailSender mailSender) { this.mailSender
+	 * = mailSender; }
+	 */
+	 
+
 	@PostMapping(value = "criar")
 	public ResponseEntity<Response<Equipamento>> create(HttpServletRequest request,
 			@RequestBody Equipamento equipamento, BindingResult result) {
@@ -62,8 +90,9 @@ public class EquipamentoController {
 			equipamento.setFoto(equipamento.getFoto().getAbsoluteFile());
 			Equipamento newEquipamento = equipamentoService.createOrUpdate(equipamento);
 			gerarQrCode(newEquipamento);
-			//ImageIcon qrCode = QrCode.lerImagem(new File(Constantes.QRCODE_PATH));
+			// ImageIcon qrCode = QrCode.lerImagem(new File(Constantes.QRCODE_PATH));
 			newEquipamento.setQrcode(new File(Constantes.QRCODE_PATH));
+			//this.sendEmail(newEquipamento.getQrcode());
 			response.setData(newEquipamento);
 
 		} catch (Exception e) {
@@ -91,7 +120,7 @@ public class EquipamentoController {
 		json.setModelo(equipamento.getModelo());
 		json.setTipo(equipamento.getTipo());
 		json.setValor(equipamento.getValor());
-		
+
 		return json;
 	}
 
@@ -135,9 +164,10 @@ public class EquipamentoController {
 			}
 
 			Equipamento equipamentoUpdated = equipamentoService.createOrUpdate(equipamento);
-			//gerarQrCode(equipamentoUpdated);
-			//ImageIcon qrCode = QrCode.lerImagem(new File(Constantes.QRCODE_PATH));
+			// gerarQrCode(equipamentoUpdated);
+			// ImageIcon qrCode = QrCode.lerImagem(new File(Constantes.QRCODE_PATH));
 			equipamentoUpdated.setQrcode(new File(Constantes.QRCODE_PATH));
+			this.sendEmail(equipamentoUpdated.getQrcode());
 			Response.setData(equipamentoUpdated);
 
 		} catch (Exception e) {
@@ -165,10 +195,10 @@ public class EquipamentoController {
 			return ResponseEntity.badRequest().body(response);
 		}
 		Equipamento data = equipamento.get();
-		//Date date = new Date(data.getMesano());
-		//DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM");
-		
-		//data.setMesano(data.toString());
+		// Date date = new Date(data.getMesano());
+		// DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM");
+
+		// data.setMesano(data.toString());
 		response.setData(data);
 		return ResponseEntity.ok().body(response);
 	}
@@ -176,7 +206,7 @@ public class EquipamentoController {
 	@DeleteMapping(value = "{id}")
 	public ResponseEntity<Response<String>> delete(@PathVariable("id") String idEquipamento) {
 		Response<String> response = new Response<String>();
-		
+
 		if (idEquipamento == null || "".equalsIgnoreCase(idEquipamento) || "null".equalsIgnoreCase(idEquipamento)) {
 			response.getErros().add("IdEquipamento = " + idEquipamento + " não pode ser nulo.");
 			return ResponseEntity.badRequest().body(response);
@@ -208,6 +238,79 @@ public class EquipamentoController {
 		response.setData(equipamento);
 		return ResponseEntity.ok().body(response);
 
+	}
+
+	private void sendEmail(File arquivo) {
+		try {
+			Properties properties = getProp();
+			FileSystemResource file = new FileSystemResource(arquivo.getCanonicalPath());
+			MimeMessage mimeMessage = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+
+			helper.setTo(env.getProperty("spring.mail.username"));
+			helper.setFrom(env.getProperty("spring.mail.username"), "Marcelo Lopes");
+			helper.setText("Enviando arquivo em anexo!!!", false);
+			helper.setValidateAddresses(true);
+			helper.setSubject("Teste Spring com Anexo");
+			// Descricao do Anexo, arquivo anexo
+			helper.addAttachment("qrCode.png", file);
+			/*
+			 * session = Session.getDefaultInstance(properties, new
+			 * javax.mail.Authenticator() { protected PasswordAuthentication
+			 * getPasswordAuthentication() { return new
+			 * PasswordAuthentication(env.getProperty("spring.mail.username"),
+			 * env.getProperty("spring.mail.password")); } });
+			 */
+
+			//Transport transport = session.getTransport();
+			InternetAddress addressFrom = new InternetAddress(env.getProperty("spring.mail.username"));
+			// helper.addRecipient(Message.RecipientType.TO, new
+			// InternetAddress(env.getProperty("spring.mail.username")));
+
+			//transport.connect();
+			mailSender.send(mimeMessage);
+			//transport.close();
+			System.out.println("Envio com Sucesso.");
+		} catch (MailException e) {
+			System.out.println("Nao foi possivel realizar o envio com anexo.\n" + e.getMessage());
+		} catch (MessagingException e) {
+			System.out.println("Email nao pode ser eviado.\n" + e.getMessage());
+		} catch (IOException e) {
+			System.out.println("Anexo nao encontrado\n" + e.getMessage());
+		}
+
+		// cria o anexo.
+		// EmailAttachment attachment = new EmailAttachment();
+		// attachment.setPath("mypictures/john.jpg"); //caminho da imagem
+//		attachment.setDisposition(EmailAttachment.ATTACHMENT);
+//		attachment.setDescription("Picture of John");
+//		attachment.setName("John");
+
+		// Cria a mensagem de e-mail.
+//		MultiPartEmail email = new MultiPartEmail();
+//		email.setHostName("mail.myserver.com"); // o servidor SMTP para envio do e-mail
+//		email.addTo("jdoe@somewhere.org", "John Doe"); //destinatario
+//		email.setFrom("me@apache.org", "Me"); //remetente
+//		email.setSubject("Mensagem de teste com anexo"); //Assunto
+//		email.setMsg("Aqui está a Imagem anexada ao e-mail"); //conteudo do e-mail
+//		email.attach(attachment); // adiciona o anexo à mensagem
+
+//		email.send();// envia o e-mail
+	}
+
+	private Properties getProp() throws IOException {
+		Properties props = new Properties();
+		props.setProperty(env.getProperty("spring.mail.host"), "smtp.gmail.com");
+		props.setProperty(env.getProperty("spring.mail.properties.mail.smtp.auth"), "true");
+		props.setProperty(env.getProperty("spring.mail.port"), "587");
+		props.setProperty(env.getProperty("spring.mail.properties.mail.smtp.starttls.enable"), "true");
+		props.put("mail.smtp.socketFactory.port", "465");
+		props.put("mail.smtp.socketFactory.fallback", "false");
+		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+		// FileInputStream file = new FileInputStream(new
+		// File("/main/resources/application.properties"));
+		// props.load(file);
+		return props;
 	}
 
 }

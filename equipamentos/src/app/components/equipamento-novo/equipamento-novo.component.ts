@@ -16,7 +16,7 @@ export class EquipamentoNovoComponent implements OnInit {
   @ViewChild("form", {static: true}) form: NgForm;
 
   startDate = new Date(1990, 0, 1);
-  equipamento = new Equipamento(0, null, '', null, 0.00, null, null);
+  equipamento = new Equipamento(0, null, '', null, 0, null, null);
   menssage: {type: string, text: string};
   classCss: {}
   tipos = new Array<string>();
@@ -93,10 +93,35 @@ export class EquipamentoNovoComponent implements OnInit {
     };
   }
 
-  onFileChange($event) {
-    let file = $event.target.files[0]; // <--- File Object for future use.
-    this.form.controls['inputFoto'].setValue(file ? file.name : ''); // <-- Set Value for Validation
-  }
+  onFileChange($event): void {
+
+    if($event && $event.target.files[0].size > 2000000){
+      this.showMessage({
+        type: 'error',
+        text: 'Tamanho Maximo da imagem 2MB'
+      })
+    } else {
+      var reader = new FileReader();
+      reader.onloadend = ($event) =>{
+        this.equipamento.foto = reader.result;
+      }
+      reader.readAsDataURL($event.target.files[0]);
+    }
+
+    //if($event == undefined || $event == null && equipamento != null){
+      
+      //document.getElementsByName("inputFoto").value = equipamento.foto
+      //var img = new Image;
+      //img.src = e.target.result;
+      //img.onload = function () {}
+      //var reader = new FileReader();
+      //reader.onloadend = (e: Event) =>{
+        //reader.readAsDataURL = this.equipamento.foto;
+      //}
+      //reader.readAsDataURL(equipamento.foto);
+    } 
+  
+
 
   fileChanged(e) {
     const reader = new FileReader();

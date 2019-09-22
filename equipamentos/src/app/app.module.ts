@@ -14,6 +14,8 @@ import { EquipamentoListaComponent } from './components/equipamento-lista/equipa
 import { DialogService } from './services/dialog.service';
 import { registerLocaleData } from '@angular/common';
 import ptBr from '@angular/common/locales/pt';
+import { HomeComponent } from './components/home/home.component';
+import { EquipamentoNovoComponent } from './components/equipamento-novo/equipamento-novo.component';
 registerLocaleData(ptBr);
 
 @NgModule({
@@ -22,7 +24,9 @@ registerLocaleData(ptBr);
     HeaderComponent,
     FooterComponent,
     MenuComponent,
-    EquipamentoListaComponent
+    EquipamentoListaComponent,
+    HomeComponent,
+    EquipamentoNovoComponent
   ],
   imports: [
     BrowserModule,

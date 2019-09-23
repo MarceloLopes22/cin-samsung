@@ -2,6 +2,7 @@ package br.com.desafio.cin.samsung.basicas;
 
 import java.io.File;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -56,7 +57,7 @@ public class Equipamento implements Serializable {
 
 	@Column(name = "valor")
 	@NotNull(message = "valor é obrigatório")
-	public Double valor;
+	public BigDecimal valor;
 
 	@Column(name = "foto")
 	@NotNull(message = "foto é obrigatório")
@@ -71,7 +72,7 @@ public class Equipamento implements Serializable {
 	public Equipamento() {
 	}
 
-	public Equipamento(TipoEquipamento tipo, String modelo, String yearMonth, Double valor, File foto) {
+	public Equipamento(TipoEquipamento tipo, String modelo, String yearMonth, BigDecimal valor, File foto) {
 		this.tipo = tipo;
 		this.modelo = modelo;
 		this.mesano = yearMonth;
@@ -111,11 +112,11 @@ public class Equipamento implements Serializable {
 		this.mesano = mesano;
 	}
 
-	public Double getValor() {
+	public BigDecimal getValor() {
 		return valor;
 	}
 
-	public void setValor(Double valor) {
+	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
 

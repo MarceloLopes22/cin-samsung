@@ -1,5 +1,7 @@
 package br.com.desafio.cin.samsung.utils;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -10,7 +12,7 @@ import br.com.desafio.cin.samsung.basicas.Equipamento;
 public class Calcular {
 
 
-	public static String calcularValorDepreciadoDoProduto(Equipamento equipamento, Double percentualDepreciacao) {
+	public static String calcularValorDepreciadoDoProduto(Equipamento equipamento, BigDecimal percentualDepreciacao) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		DecimalFormat decimalFormat = new DecimalFormat("#,###.00");
 
@@ -24,11 +26,15 @@ public class Calcular {
 		
 		//Calculo da diferença entre as 2 datas em meses
 		long diferencaMeses = ChronoUnit.MONTHS.between(dataInformada,dataAtual);  
-		Double valorDepreciado = equipamento.getValor() / diferencaMeses;
-		double diferenca = equipamento.getValor() - valorDepreciado;
-		
-		String diferencaFormatada = decimalFormat.format(diferenca);
-		equipamento.setValorDepreciado(diferencaFormatada);
+		if (diferencaMeses != 0) {
+			BigDecimal valorDepreciado = equipamento.getValor().divide(new BigDecimal(diferencaMeses), 2, RoundingMode.HALF_EVEN);
+			BigDecimal diferenca = equipamento.getValor().subtract(valorDepreciado);
+			
+			String diferencaFormatada = decimalFormat.format(diferenca);
+			equipamento.setValorDepreciado(diferencaFormatada);
+		} else {
+			equipamento.setValorDepreciado("0");
+		}
 		
 		return equipamento.getValorDepreciado();
 	}

@@ -5,7 +5,6 @@ import { EquipamentoService } from 'src/app/services/equipamento.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResponseApi } from 'src/app/model/responseApi.model';
 import { TipoEquipamento } from 'src/app/model/enums/TipoEquipamento';
-//import {  FileUploader, FileSelectDirective, FileItem } from 'ng2-file-upload/ng2-file-upload';
 
 @Component({
   selector: 'app-equipamento-novo',
@@ -16,7 +15,7 @@ export class EquipamentoNovoComponent implements OnInit {
   @ViewChild("form", {static: true}) form: NgForm;
 
   startDate = new Date(1990, 0, 1);
-  equipamento = new Equipamento(0, null, '', null, 0, null, null);
+  equipamento = new Equipamento(0, null, '', null, 0, null, null, '');
   menssage: {type: string, text: string};
   classCss: {}
   tipos = new Array<string>();
@@ -24,13 +23,10 @@ export class EquipamentoNovoComponent implements OnInit {
   ngAfterViewInit() {
   }
   
-  //uploader: FileUploader = new FileUploader({ url: "equipamento.foto", removeAfterUpload: false, autoUpload: true });
 
   constructor(private equipamentoService: EquipamentoService,
     private activatedRoute: ActivatedRoute,
     private router: Router) { 
-      //this.tipos =  Object.keys(TipoEquipamento);
-      
     }
 
   ngOnInit() {
@@ -55,13 +51,9 @@ export class EquipamentoNovoComponent implements OnInit {
       });
     });    
   }
-//["erros"][0]
   findById(id: number) {
     this.equipamentoService.findById(id).subscribe((responseApi: ResponseApi) =>{
       this.equipamento = responseApi.data;
-      //this.uploader.uploadItem(new FileItem(this.uploader, this.equipamento.foto, this.uploader.autoUpload));
-      //this.uploader.setOptions(this.equipamento.foto);
-      //this.form.controls.foto.setValue(this.equipamento.foto);
     }, err =>{
       this.showMessage({
         type: 'error',
@@ -107,18 +99,6 @@ export class EquipamentoNovoComponent implements OnInit {
       }
       reader.readAsDataURL($event.target.files[0]);
     }
-
-    //if($event == undefined || $event == null && equipamento != null){
-      
-      //document.getElementsByName("inputFoto").value = equipamento.foto
-      //var img = new Image;
-      //img.src = e.target.result;
-      //img.onload = function () {}
-      //var reader = new FileReader();
-      //reader.onloadend = (e: Event) =>{
-        //reader.readAsDataURL = this.equipamento.foto;
-      //}
-      //reader.readAsDataURL(equipamento.foto);
     } 
   
 

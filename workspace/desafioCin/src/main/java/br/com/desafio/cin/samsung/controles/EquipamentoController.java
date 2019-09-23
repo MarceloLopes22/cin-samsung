@@ -2,6 +2,7 @@ package br.com.desafio.cin.samsung.controles;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -189,7 +190,7 @@ public class EquipamentoController {
 			return ResponseEntity.badRequest().body(response);
 		}
 		Equipamento equipamentoConsultado = equipamento.get();
-		Calcular.calcularValorDepreciadoDoProduto(equipamentoConsultado, new Double(env.getProperty("depreciacao")));
+		Calcular.calcularValorDepreciadoDoProduto(equipamentoConsultado, new BigDecimal(env.getProperty("depreciacao")));
 		response.setData(equipamentoConsultado);
 		return ResponseEntity.ok().body(response);
 	}

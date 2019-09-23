@@ -8,5 +8,6 @@ export class Equipamento {
                 public mesano: string,
                 public valor: number,
                 public foto: any,
-                public qrcode: any){}
+                public qrcode: any,
+                public valorDepreciado: string){}
 }

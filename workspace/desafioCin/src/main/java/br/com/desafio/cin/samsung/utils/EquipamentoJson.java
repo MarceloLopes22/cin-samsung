@@ -1,5 +1,7 @@
 package br.com.desafio.cin.samsung.utils;
 
+import java.math.BigDecimal;
+
 import br.com.desafio.cin.samsung.enums.TipoEquipamento;
 
 public class EquipamentoJson {
@@ -8,13 +10,12 @@ public class EquipamentoJson {
 	public TipoEquipamento tipo;
 	public String modelo;
 	public String mesano;
-	public Double valor;
+	public BigDecimal valor;
 	
 	public EquipamentoJson() {
 	}
 	
-	public EquipamentoJson(Long id_equipamento, TipoEquipamento tipo, String modelo, String mesano, Double valor) {
-		super();
+	public EquipamentoJson(Long id_equipamento, TipoEquipamento tipo, String modelo, String mesano, BigDecimal valor) {
 		this.id_equipamento = id_equipamento;
 		this.tipo = tipo;
 		this.modelo = modelo;
@@ -54,11 +55,11 @@ public class EquipamentoJson {
 		this.mesano = mesano;
 	}
 
-	public Double getValor() {
+	public BigDecimal getValor() {
 		return valor;
 	}
 
-	public void setValor(Double valor) {
+	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
 }

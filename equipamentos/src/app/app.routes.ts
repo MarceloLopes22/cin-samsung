@@ -1,3 +1,4 @@
+import { EquipamentoDetalheComponent } from './components/equipamento-detalhe/equipamento-detalhe.component';
 import { Routes, RouterModule } from '@angular/router';
 import { ModuleWithProviders } from '@angular/core';
 import { EquipamentoListaComponent } from './components/equipamento-lista/equipamento-lista.component';
@@ -10,7 +11,7 @@ export const ROUTES: Routes = [
     {path: 'equipamento-lista', component: EquipamentoListaComponent},
     {path: 'equipamento-novo', component: EquipamentoNovoComponent},
     {path: 'equipamento-novo/:id', component: EquipamentoNovoComponent},
-    /*{path: 'detalhar-equipamento/:id', component: DetalharProfissionalComponent},*/
+    {path: 'detalhar-equipamento/:id', component: EquipamentoDetalheComponent},
 ]
 
 export const routes: ModuleWithProviders = RouterModule.forRoot(ROUTES);

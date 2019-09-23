@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -71,7 +72,7 @@ public class EquipamentoResourceTest {
 		Equipamento equipamento = new Equipamento(TipoEquipamento.AUTOMOTIVO, 
 				"Fox Xtreme2019", 
 				DateTimeFormatter.ofPattern("MM/yyyy").format(LocalDate.now()), 
-				Double.valueOf(100000), file);
+				BigDecimal.valueOf(100000), file);
 		String json = null;
 		 try {
 			 json = mapper.writeValueAsString(equipamento);
@@ -90,7 +91,7 @@ public class EquipamentoResourceTest {
 		Equipamento equipamento = new Equipamento(TipoEquipamento.AUTOMOTIVO, 
 				"Fox Xtreme2019", 
 				DateTimeFormatter.ofPattern("MM/yyyy").format(LocalDate.now()), 
-				Double.valueOf(100000), null);
+				BigDecimal.valueOf(100000), null);
 		String json = mapper.writeValueAsString(equipamento);
 		 mvc.perform(post(url)
 			    .contentType(MediaType.APPLICATION_JSON)
@@ -198,7 +199,7 @@ public class EquipamentoResourceTest {
 		List<Equipamento> lista = service.findAll(0, 10).getContent();
 		Equipamento equipamento = lista.get(lista.size()-1);
 		
-		String valorDepreciadoDoProduto = Calcular.calcularValorDepreciadoDoProduto(equipamento, new Double(env.getProperty("depreciacao")));
+		String valorDepreciadoDoProduto = Calcular.calcularValorDepreciadoDoProduto(equipamento, new BigDecimal(env.getProperty("depreciacao")));
 		
 		assertEquals(valorDepreciadoDoProduto, equipamento.getValorDepreciado());
 	}

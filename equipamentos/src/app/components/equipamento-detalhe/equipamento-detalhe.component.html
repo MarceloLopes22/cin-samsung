@@ -1,1 +1,47 @@
-<p>equipamento-detalhe works!</p>
+<div class="col-md-10" style="margin-left: 0%">
+    <div class="box box-info">
+        <div class="box-header with-border">
+            <h3>Detalhe de Equipamento</h3>
+        </div>
+        <form class="form-horizontal">
+            <div [ngClass]="classCss" role="alert" *ngIf="menssage">
+                <strong>{{menssage.text}}</strong>
+            </div>
+            <div class="box-body">
+                <ul class="list-group list-group-unbordered">
+                    <li class="list-group-item">
+                        <b>Tipo Equipamento: </b>
+                        <span>{{equipamento.tipo}}</span>
+                    </li>
+                    <li class="list-group-item">
+                        <b>Model: </b>
+                        <span>{{equipamento.modelo}}</span>
+                    </li>
+                    <li class="list-group-item">
+                        <b>Mês/Ano compra: </b>
+                        <span>{{equipamento.mesano}}</span>
+                    </li>
+                    <li class="list-group-item">
+                        <b>Valor da compra: </b>
+                        <span>{{equipamento.valor}}</span>
+                    </li>
+                    <li class="list-group-item">
+                        <b>Foto: </b>
+                        <span><img [src]="equipamento.foto" hidden="450px" width="370px"></span>
+                    </li>
+                    <li class="list-group-item">
+                        <b>QRCode: </b>
+                        <ngx-qrcode qrc-element-type="img" [qrc-value]="equipamento.qrcode"></ngx-qrcode>
+                    </li>
+                    <li class="list-group-item">
+                        <b>Valor Depreciado: </b>
+                        <span>{{equipamento.valorDepreciado}}</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="box-footer">
+                <button class="btn btn-primary" (click)="voltar()">Voltar</button>
+            </div>
+        </form>
+    </div>
+</div>

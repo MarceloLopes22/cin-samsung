@@ -11,3 +11,8 @@ CREATE TABLE Equipamento (
   foto LONGBLOB NOT NULL,
   PRIMARY KEY(id_equipamento)
 );
+
+INSERT INTO `cin.Equipamento` (`id_equipamento`,`tipo`,`modelo`,`mesano`,`valor`,`foto`) VALUES (3,'ELETRONICO','casa','1900-01',1111111111,?);
+INSERT INTO `cin.Equipamento` (`id_equipamento`,`tipo`,`modelo`,`mesano`,`valor`,`foto`) VALUES (4,'AUTOMOTIVO','Fox Xtreme2019','2019-09',6000000000,?);
+
+select * from cin.Equipamento;

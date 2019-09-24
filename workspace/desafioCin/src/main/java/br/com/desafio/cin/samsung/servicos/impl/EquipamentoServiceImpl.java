@@ -12,6 +12,7 @@ import br.com.desafio.cin.samsung.basicas.Equipamento;
 import br.com.desafio.cin.samsung.repositorios.EquipamentoRepository;
 import br.com.desafio.cin.samsung.servicos.EquipamentoService;
 
+@SuppressWarnings("deprecation")
 @Service
 public class EquipamentoServiceImpl implements EquipamentoService {
 	
@@ -33,14 +34,10 @@ public class EquipamentoServiceImpl implements EquipamentoService {
 		this.repo.deleteById(idEquipamento);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public Page<Equipamento> findAll(int page, int count) {
 		Pageable pages = new PageRequest(page, count);
 		Page<Equipamento> lista = this.repo.findAll(pages);
 		return lista;
 	}
-
-	
-
 }

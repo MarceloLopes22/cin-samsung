@@ -21,7 +21,7 @@
                     <tr *ngFor="let e of listaEquipamentos">
                         <td>{{e.tipo}}</td>
                         <td>{{e.modelo}}</td>
-                        <td>{{e.mesano}}</td>
+                        <td>{{e.mesano | date: 'MM-yyyy'}}</td>
                         <td>{{e.valor | currency:'BRL':true}}</td>
                         <td><button class="btn btn-primary" (click)="edit(e.id_equipamento)">Editar</button></td>
                         <td><button class="btn btn-danger" (click)="delete(e.id_equipamento)">Excluir</button></td>

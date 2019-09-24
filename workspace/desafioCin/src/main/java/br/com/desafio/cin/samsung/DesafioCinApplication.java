@@ -8,6 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(value = "br.com.desafio.cin.samsung.*")
 public class DesafioCinApplication {
 
+	
 	public static void main(String[] args) {
 		SpringApplication.run(DesafioCinApplication.class, args);
 	}

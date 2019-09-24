@@ -67,6 +67,9 @@ public class Equipamento implements Serializable {
 	public File qrcode;
 	
 	@Transient
+	public String qrcodeConteudo;
+	
+	@Transient
 	public String valorDepreciado;
 
 	public Equipamento() {
@@ -134,6 +137,14 @@ public class Equipamento implements Serializable {
 
 	public void setQrcode(File qrcode) {
 		this.qrcode = qrcode;
+	}
+	
+	public String getQrcodeConteudo() {
+		return qrcodeConteudo;
+	}
+
+	public void setQrcodeConteudo(String qrcodeConteudo) {
+		this.qrcodeConteudo = qrcodeConteudo;
 	}
 
 	public String getValorDepreciado() {

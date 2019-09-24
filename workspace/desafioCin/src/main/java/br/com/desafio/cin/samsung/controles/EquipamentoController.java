@@ -4,21 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Optional;
-import java.util.Properties;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailException;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,12 +25,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import br.com.desafio.cin.samsung.basicas.Equipamento;
 import br.com.desafio.cin.samsung.constantes.Constantes;
 import br.com.desafio.cin.samsung.controles.response.Response;
+import br.com.desafio.cin.samsung.email.EnviarEmail;
 import br.com.desafio.cin.samsung.servicos.EquipamentoService;
 import br.com.desafio.cin.samsung.utils.Calcular;
 import br.com.desafio.cin.samsung.utils.EquipamentoJson;
@@ -55,19 +49,11 @@ public class EquipamentoController {
 	@Autowired
 	private ObjectMapper mapper;
 
-	@Autowired(required = true)
-	private JavaMailSender mailSender;
-
 	@Autowired
 	private Environment env;
-	/*
-	 * @Autowired(required = true) private Session session;
-	 */
-
-	/*
-	 * @Bean public void setMailSender(JavaMailSender mailSender) { this.mailSender
-	 * = mailSender; }
-	 */
+	
+	@Autowired
+	private EnviarEmail email;
 	 
 
 	@PostMapping(value = "criar")
@@ -86,9 +72,9 @@ public class EquipamentoController {
 			equipamento.setFoto(equipamento.getFoto().getAbsoluteFile());
 			Equipamento newEquipamento = equipamentoService.createOrUpdate(equipamento);
 			gerarQrCode(newEquipamento);
-			// ImageIcon qrCode = QrCode.lerImagem(new File(Constantes.QRCODE_PATH));
 			newEquipamento.setQrcode(new File(Constantes.QRCODE_PATH));
-			//this.sendEmail(newEquipamento.getQrcode());
+			newEquipamento.setQrcodeConteudo(mapper.writeValueAsString(this.parseEquipamentoToEquipamentoJson(newEquipamento)));
+			email.enviar(newEquipamento.getQrcode());
 			response.setData(newEquipamento);
 
 		} catch (Exception e) {
@@ -134,7 +120,7 @@ public class EquipamentoController {
 			result.addError(new ObjectError(Equipamento.class.getSimpleName(), "Mês ano é obrigatório."));
 		}
 
-		if (equipamento.getValor() == null || equipamento.getValor().equals(Double.MIN_VALUE)) {
+		if (equipamento.getValor() == null || equipamento.getValor().equals(BigDecimal.ZERO)) {
 			result.addError(new ObjectError(Equipamento.class.getSimpleName(), "Valor é obrigatório."));
 		}
 
@@ -162,7 +148,7 @@ public class EquipamentoController {
 			Equipamento equipamentoUpdated = equipamentoService.createOrUpdate(equipamento);
 			gerarQrCode(equipamentoUpdated);
 			equipamentoUpdated.setQrcode(new File(Constantes.QRCODE_PATH));
-			//this.sendEmail(equipamentoUpdated.getQrcode());
+			email.enviar(equipamentoUpdated.getQrcode());
 			Response.setData(equipamentoUpdated);
 
 		} catch (Exception e) {
@@ -180,7 +166,7 @@ public class EquipamentoController {
 	}
 
 	@GetMapping(value = "{id}")
-	public ResponseEntity<Response<Equipamento>> findById(@PathVariable("id") String idEquipamento) {
+	public ResponseEntity<Response<Equipamento>> findById(@PathVariable("id") String idEquipamento) throws JsonProcessingException {
 		Response<Equipamento> response = new Response<Equipamento>();
 
 		Optional<Equipamento> equipamento = equipamentoService.findByIdEquipamento(new Long(idEquipamento));
@@ -190,6 +176,8 @@ public class EquipamentoController {
 			return ResponseEntity.badRequest().body(response);
 		}
 		Equipamento equipamentoConsultado = equipamento.get();
+		equipamentoConsultado.setQrcodeConteudo(mapper.writeValueAsString(this.parseEquipamentoToEquipamentoJson(equipamentoConsultado)));
+		equipamentoConsultado.setQrcode(new File(Constantes.QRCODE_PATH));
 		Calcular.calcularValorDepreciadoDoProduto(equipamentoConsultado, new BigDecimal(env.getProperty("depreciacao")));
 		response.setData(equipamentoConsultado);
 		return ResponseEntity.ok().body(response);
@@ -231,78 +219,4 @@ public class EquipamentoController {
 		return ResponseEntity.ok().body(response);
 
 	}
-
-	private void sendEmail(File arquivo) {
-		try {
-			Properties properties = getProp();
-			FileSystemResource file = new FileSystemResource(arquivo.getCanonicalPath());
-			MimeMessage mimeMessage = mailSender.createMimeMessage();
-			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-
-			helper.setTo(env.getProperty("spring.mail.username"));
-			helper.setFrom(env.getProperty("spring.mail.username"), "Marcelo Lopes");
-			helper.setText("Enviando arquivo em anexo!!!", false);
-			helper.setValidateAddresses(true);
-			helper.setSubject("Teste Spring com Anexo");
-			// Descricao do Anexo, arquivo anexo
-			helper.addAttachment("qrCode.png", file);
-			/*
-			 * session = Session.getDefaultInstance(properties, new
-			 * javax.mail.Authenticator() { protected PasswordAuthentication
-			 * getPasswordAuthentication() { return new
-			 * PasswordAuthentication(env.getProperty("spring.mail.username"),
-			 * env.getProperty("spring.mail.password")); } });
-			 */
-
-			//Transport transport = session.getTransport();
-			InternetAddress addressFrom = new InternetAddress(env.getProperty("spring.mail.username"));
-			// helper.addRecipient(Message.RecipientType.TO, new
-			// InternetAddress(env.getProperty("spring.mail.username")));
-
-			//transport.connect();
-			mailSender.send(mimeMessage);
-			//transport.close();
-			System.out.println("Envio com Sucesso.");
-		} catch (MailException e) {
-			System.out.println("Nao foi possivel realizar o envio com anexo.\n" + e.getMessage());
-		} catch (MessagingException e) {
-			System.out.println("Email nao pode ser eviado.\n" + e.getMessage());
-		} catch (IOException e) {
-			System.out.println("Anexo nao encontrado\n" + e.getMessage());
-		}
-
-		// cria o anexo.
-		// EmailAttachment attachment = new EmailAttachment();
-		// attachment.setPath("mypictures/john.jpg"); //caminho da imagem
-//		attachment.setDisposition(EmailAttachment.ATTACHMENT);
-//		attachment.setDescription("Picture of John");
-//		attachment.setName("John");
-
-		// Cria a mensagem de e-mail.
-//		MultiPartEmail email = new MultiPartEmail();
-//		email.setHostName("mail.myserver.com"); // o servidor SMTP para envio do e-mail
-//		email.addTo("jdoe@somewhere.org", "John Doe"); //destinatario
-//		email.setFrom("me@apache.org", "Me"); //remetente
-//		email.setSubject("Mensagem de teste com anexo"); //Assunto
-//		email.setMsg("Aqui está a Imagem anexada ao e-mail"); //conteudo do e-mail
-//		email.attach(attachment); // adiciona o anexo à mensagem
-
-//		email.send();// envia o e-mail
-	}
-
-	private Properties getProp() throws IOException {
-		Properties props = new Properties();
-		props.setProperty(env.getProperty("spring.mail.host"), "smtp.gmail.com");
-		props.setProperty(env.getProperty("spring.mail.properties.mail.smtp.auth"), "true");
-		props.setProperty(env.getProperty("spring.mail.port"), "587");
-		props.setProperty(env.getProperty("spring.mail.properties.mail.smtp.starttls.enable"), "true");
-		props.put("mail.smtp.socketFactory.port", "465");
-		props.put("mail.smtp.socketFactory.fallback", "false");
-		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-		// FileInputStream file = new FileInputStream(new
-		// File("/main/resources/application.properties"));
-		// props.load(file);
-		return props;
-	}
-
 }

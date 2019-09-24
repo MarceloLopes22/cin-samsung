@@ -10,7 +10,7 @@ import { ResponseApi } from 'src/app/model/responseApi.model';
 })
 export class EquipamentoDetalheComponent implements OnInit {
 
-  equipamento = new Equipamento(null, null, '', '', 0, null, null, '');
+  equipamento = new Equipamento(null, null, '', '', 0, null, null, '', '');
   menssage: {};
   classCss: {};
 

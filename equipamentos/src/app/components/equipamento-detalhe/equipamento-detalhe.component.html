@@ -19,7 +19,7 @@
                     </li>
                     <li class="list-group-item">
                         <b>Mês/Ano compra: </b>
-                        <span>{{equipamento.mesano}}</span>
+                        <span>{{equipamento.mesano  | date: 'MM-yyyy'}}</span>
                     </li>
                     <li class="list-group-item">
                         <b>Valor da compra: </b>
@@ -31,7 +31,7 @@
                     </li>
                     <li class="list-group-item">
                         <b>QRCode: </b>
-                        <ngx-qrcode qrc-element-type="img" [qrc-value]="equipamento.qrcode"></ngx-qrcode>
+                        <ngx-qrcode qrc-element-type="img" [qrc-value]="equipamento.qrcodeConteudo"></ngx-qrcode>
                     </li>
                     <li class="list-group-item">
                         <b>Valor Depreciado: </b>

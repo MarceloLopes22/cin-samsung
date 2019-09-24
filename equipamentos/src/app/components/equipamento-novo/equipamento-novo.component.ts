@@ -14,11 +14,11 @@ export class EquipamentoNovoComponent implements OnInit {
 
   @ViewChild("form", {static: true}) form: NgForm;
 
-  startDate = new Date(1990, 0, 1);
-  equipamento = new Equipamento(0, null, '', null, 0, null, null, '');
+  equipamento = new Equipamento(0, null, '', null, 0, null, null, '', '');
   menssage: {type: string, text: string};
   classCss: {}
   tipos = new Array<string>();
+  isEdicao:Boolean = false;
 
   ngAfterViewInit() {
   }
@@ -33,6 +33,7 @@ export class EquipamentoNovoComponent implements OnInit {
     let id: number = this.activatedRoute.snapshot.params['id'];
     if(id != undefined){
       this.findById(id);
+      this.isEdicao = true;
     }
     this.tipos = Object.keys(TipoEquipamento);
   }
@@ -51,6 +52,7 @@ export class EquipamentoNovoComponent implements OnInit {
       });
     });    
   }
+
   findById(id: number) {
     this.equipamentoService.findById(id).subscribe((responseApi: ResponseApi) =>{
       this.equipamento = responseApi.data;
@@ -99,16 +101,5 @@ export class EquipamentoNovoComponent implements OnInit {
       }
       reader.readAsDataURL($event.target.files[0]);
     }
-    } 
-  
-
-
-  fileChanged(e) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.equipamento.foto = reader.result;
-    };
-    reader.readAsText(e.target.files[0]);
-    console.log(e.target.files[0]);
-  }
+  } 
 }

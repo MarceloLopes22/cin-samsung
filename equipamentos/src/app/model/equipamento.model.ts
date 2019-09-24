@@ -9,5 +9,6 @@ export class Equipamento {
                 public valor: number,
                 public foto: any,
                 public qrcode: any,
+                public qrcodeConteudo: string,
                 public valorDepreciado: string){}
 }

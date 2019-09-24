@@ -33,6 +33,7 @@ import br.com.desafio.cin.samsung.basicas.Equipamento;
 import br.com.desafio.cin.samsung.constantes.Constantes;
 import br.com.desafio.cin.samsung.controles.response.Response;
 import br.com.desafio.cin.samsung.email.EnviarEmail;
+import br.com.desafio.cin.samsung.padraoProjeto.FactoryMethod;
 import br.com.desafio.cin.samsung.servicos.EquipamentoService;
 import br.com.desafio.cin.samsung.utils.Calcular;
 import br.com.desafio.cin.samsung.utils.EquipamentoJson;
@@ -60,8 +61,6 @@ public class EquipamentoController {
 	public ResponseEntity<Response<Equipamento>> create(HttpServletRequest request,
 			@RequestBody Equipamento equipamento, BindingResult result) {
 		Response<Equipamento> response = new Response<Equipamento>();
-
-		QrCode.removerImagensDiretorio();
 
 		try {
 			validateComun(equipamento, result);
@@ -96,7 +95,7 @@ public class EquipamentoController {
 	}
 
 	private EquipamentoJson parseEquipamentoToEquipamentoJson(Equipamento equipamento) {
-		EquipamentoJson json = new EquipamentoJson();
+		EquipamentoJson json = (EquipamentoJson) FactoryMethod.getInstance().criarObjetos(EquipamentoJson.class);
 		json.setId_equipamento(equipamento.getId_equipamento());
 		json.setMesano(equipamento.getMesano());
 		json.setModelo(equipamento.getModelo());
@@ -134,8 +133,6 @@ public class EquipamentoController {
 	public ResponseEntity<Response<Equipamento>> update(HttpServletRequest request,
 			@RequestBody Equipamento equipamento, BindingResult result) {
 		Response<Equipamento> Response = new Response<Equipamento>();
-
-		QrCode.removerImagensDiretorio();
 
 		try {
 			validateUpdate(equipamento, result);

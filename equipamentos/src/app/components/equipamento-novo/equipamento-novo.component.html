@@ -11,7 +11,7 @@
                 <div class="form-group">
                     <label for="inputTipo" class="col-sm-4 control-label">Tipo</label>
                     <div class="col-sm-8">
-                        <select name="tipo" #tipo="ngModel" [(ngModel)]="equipamento.tipo" class="form-control">
+                        <select name="tipo" #tipo="ngModel" [(ngModel)]="equipamento.tipo" class="form-control" required>
                             <option *ngFor="let t of tipos" 
                                     id="inputTipo"
                                     [value]="t"
@@ -30,7 +30,7 @@
                             name="modelo"
                             #modelo="ngModel"
                             placeholder="Modelo"
-                            required max="200" maxlength="200">
+                            onKeyDown="if(this.value.length==200) return false;" required >
                         <span class="help-block" *ngIf="modelo?.invalid && (modelo?.dirty || modelo?.touched)">
                             Modelo está invalido.
                         </span>
@@ -50,7 +50,7 @@
                             id="mesano"
                             name="mesano"
                             min="1900-01"
-                            #mesano="ngModel"><!-- pattern="YYYY-MM"-->
+                            #mesano="ngModel" required>
                         <span class="help-block" *ngIf="mesano.invalid && mesano.dirty">
                             Mês / Ano está invalido.
                         </span>
@@ -85,7 +85,7 @@
                                 class="form-control-file"
                                 id="inputFoto"
                                 name="inputFoto"
-                                (change)="onFileChange($event)"/>
+                                (change)="onFileChange($event)" required/>
                             <span class="help-block" *ngIf="equipamento.foto && equipamento.foto.invalid && equipamento.foto.dirty">
                                 Arquivo está invalido.
                             </span>

@@ -62,4 +62,23 @@ public class EquipamentoJson {
 	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		EquipamentoJson other = (EquipamentoJson) obj;
+		if (id_equipamento == null) {
+			if (other.id_equipamento != null)
+				return false;
+		} else if (!id_equipamento.equals(other.id_equipamento))
+			return false;
+		if (tipo != other.tipo)
+			return false;
+		return true;
+	}
 }

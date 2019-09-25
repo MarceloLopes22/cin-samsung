@@ -3,6 +3,7 @@ package br.com.desafio.cin.samsung.controles;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -15,7 +16,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -103,7 +103,7 @@ public class EquipamentoResourceTest {
 		String url = "/api/equipamento/atualizar";
 		
 		File file = new File("https://cdn-motorshow-ssl.akamaized.net/wp-content/uploads/sites/2/2018/05/4_ms416_volkswagen-fox-xtreme1-747x420.jpg");
-		List<Equipamento> equipamentos = service.findAll(0, 10).getContent();
+		List<Equipamento> equipamentos = service.findAll(0, 10).getBody().getData().getContent();
 		Equipamento equipamento = equipamentos.get(equipamentos.size()-1);
 		equipamento.setFoto(file);
 		String json = mapper.writeValueAsString(equipamento);
@@ -116,7 +116,7 @@ public class EquipamentoResourceTest {
 	public void testaUpdateFalha() throws Exception {
 		String url = "/api/equipamento/atualizar";
 		
-		List<Equipamento> equipamentos = service.findAll(0, 10).getContent();
+		List<Equipamento> equipamentos = service.findAll(0, 10).getBody().getData().getContent();
 		Equipamento equipamento = equipamentos.get(equipamentos.size()-1);
 		equipamento.setMesano(null);
 		String json = mapper.writeValueAsString(equipamento);
@@ -129,7 +129,7 @@ public class EquipamentoResourceTest {
 	public void testaFindByIdSucesso() throws Exception {
 		String url = "/api/equipamento/";
 		
-		List<Equipamento> list = service.findAll(0, 10).getContent();
+		List<Equipamento> list = service.findAll(0, 10).getBody().getData().getContent();
 		Equipamento equipamento = list.get(list.size()-1);
 		url = url.concat(equipamento.getId_equipamento().toString());
 		
@@ -142,7 +142,7 @@ public class EquipamentoResourceTest {
 	public void testaFindByIdFalha() throws Exception {
 		String url = "/api/equipamento/";
 		
-		List<Equipamento> list = service.findAll(0, 10000).getContent();
+		List<Equipamento> list = service.findAll(0, 10000).getBody().getData().getContent();
 		Equipamento equipamento = list.get(list.size()-1);
 		Long naoExiste = equipamento.getId_equipamento() + 1;
 		url = url.concat(naoExiste.toString());
@@ -155,16 +155,16 @@ public class EquipamentoResourceTest {
 	public void testaDeleteSucesso() throws Exception {
 		String url = "/api/equipamento/";
 		
-		List<Equipamento> lista = service.findAll(0, 10).getContent();
+		List<Equipamento> lista = service.findAll(0, 10).getBody().getData().getContent();
 		Equipamento equipamento = lista.get(lista.size()-1);
 		url = url.concat(equipamento.getId_equipamento().toString());
 		
 		this.mvc.perform(delete(url))
 		.andExpect(status().isOk());
 		
-		Optional<Equipamento> findByIdEquipamento = service.findByIdEquipamento(equipamento.getId_equipamento());
+		Equipamento equipamentoConsultado = service.findByIdEquipamento(equipamento.getId_equipamento()).getBody().getData();
 		
-		assertEquals(Boolean.FALSE, findByIdEquipamento.isPresent());
+		assertNull(equipamentoConsultado);
 	}
 	
 	@Test
@@ -183,7 +183,7 @@ public class EquipamentoResourceTest {
 	
 	@Test
 	public void testaFindAllSucesso() throws Exception {
-		Page<Equipamento> all = service.findAll(0, 10);
+		Page<Equipamento> all = service.findAll(0, 10).getBody().getData();
 		assertNotNull(all.getContent());
 	}
 	
@@ -196,7 +196,7 @@ public class EquipamentoResourceTest {
 		
 	@Test
 	public void testCalcularValorDepreciadoDoProduto() throws Exception {
-		List<Equipamento> lista = service.findAll(0, 10).getContent();
+		List<Equipamento> lista = service.findAll(0, 10).getBody().getData().getContent();
 		Equipamento equipamento = lista.get(lista.size()-1);
 		
 		String valorDepreciadoDoProduto = Calcular.calcularValorDepreciadoDoProduto(equipamento, new BigDecimal(env.getProperty("depreciacao")));

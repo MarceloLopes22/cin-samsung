@@ -1,19 +1,20 @@
 package br.com.desafio.cin.samsung.servicos;
 
-import java.util.Optional;
-
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 
 import br.com.desafio.cin.samsung.basicas.Equipamento;
+import br.com.desafio.cin.samsung.controles.response.Response;
 
 public interface EquipamentoService {
 
-	public Equipamento createOrUpdate(Equipamento equipamento);
+	public ResponseEntity<Response<Equipamento>> createOrUpdate(Equipamento equipamento,  BindingResult result);
 
-	public Optional<Equipamento> findByIdEquipamento(Long idEquipamento);
+	public ResponseEntity<Response<Equipamento>> findByIdEquipamento(Long idEquipamento);
 
-	public void delete(Long idEquipamento);
+	public ResponseEntity<Response<String>> delete(String idEquipamento);
 
-	public Page<Equipamento> findAll(int page, int count);
+	public ResponseEntity<Response<Page<Equipamento>>> findAll(int page, int count);
 
 }

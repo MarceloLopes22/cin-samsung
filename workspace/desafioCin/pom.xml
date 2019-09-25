@@ -107,7 +107,7 @@
 				<version>1.0.0</version>
 				<configuration>
 					<imageName>${docker.image.name}:${docker.image.tag}</imageName>
-					<dockerDirectory>${basedir}/target/dockerfile</dockerDirectory>
+					<dockerDirectory>${basedir}ssrc\main\resources\docker</dockerDirectory>
 					<resources>
 						<resource>
 							<targetPath>/</targetPath>

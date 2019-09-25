@@ -42,6 +42,7 @@ import br.com.desafio.cin.samsung.utils.QrCode;
 @RestController
 @RequestMapping("/api/equipamento")
 @CrossOrigin(origins = "*")
+//@PropertySource("${GOOGLE_APPLICATION_CREDENTIALS}")
 public class EquipamentoController {
 
 	@Autowired

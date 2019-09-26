@@ -100,11 +100,7 @@ public class EquipamentoServiceImpl implements EquipamentoService {
 		}
 
 		if (equipamento.getValor() == null || equipamento.getValor().equals(BigDecimal.ZERO)) {
-			result.addError(new ObjectError(Equipamento.class.getSimpleName(), "Valor é obrigatório."));
-		}
-
-		if (equipamento.getFoto() == null) {
-			result.addError(new ObjectError(Equipamento.class.getSimpleName(), "Foto é obrigatório."));
+			result.addError(new ObjectError(Equipamento.class.getSimpleName(), "Valor é obrigatórioe não pode ser 0."));
 		}
 
 	}

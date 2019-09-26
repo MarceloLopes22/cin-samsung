@@ -48,7 +48,7 @@ export class EquipamentoNovoComponent implements OnInit {
     }, err =>{
       this.showMessage({
         type: 'error',
-        text: err["error"]
+        text: err["error"]["erros"][0] != null ? err["error"]["erros"][0] : err["error"]
       });
     });    
   }

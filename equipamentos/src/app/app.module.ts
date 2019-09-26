@@ -17,13 +17,7 @@ import ptBr from '@angular/common/locales/pt';
 import { HomeComponent } from './components/home/home.component';
 import { EquipamentoNovoComponent } from './components/equipamento-novo/equipamento-novo.component';
 registerLocaleData(ptBr);
-import { FileUploadModule  } from 'ng2-file-upload';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { 
-  MatDatepickerModule,
-  MatNativeDateModule,
-  MatInputModule
-} from '@angular/material';
 import { EquipamentoDetalheComponent } from './components/equipamento-detalhe/equipamento-detalhe.component';
 
 @NgModule({
@@ -38,18 +32,13 @@ import { EquipamentoDetalheComponent } from './components/equipamento-detalhe/eq
     EquipamentoDetalheComponent,
   ],
   imports: [
-    //BrowserModule,
+    BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     routes,
     HttpClientModule,
     FormsModule,
-    NgxQRCodeModule,
-    FileUploadModule ,
-
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatInputModule,
+    NgxQRCodeModule
   ],
   providers: [{provide: LOCALE_ID, useValue: 'pt-BR'}, EquipamentoService, DialogService],
   bootstrap: [AppComponent]

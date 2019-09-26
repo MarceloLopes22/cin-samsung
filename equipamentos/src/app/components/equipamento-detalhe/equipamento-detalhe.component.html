@@ -18,16 +18,12 @@
                         <span>{{equipamento.modelo}}</span>
                     </li>
                     <li class="list-group-item">
-                        <b>Mês/Ano compra: </b>
-                        <span>{{equipamento.mesano  | date: 'MM-yyyy'}}</span>
+                        <b>Ano/Mês compra: </b>
+                        <span>{{equipamento.mesano}}</span>
                     </li>
                     <li class="list-group-item">
                         <b>Valor da compra: </b>
-                        <span>{{equipamento.valor}}</span>
-                    </li>
-                    <li class="list-group-item">
-                        <b>Foto: </b>
-                        <span><img [src]="equipamento.foto" hidden="450px" width="370px"></span>
+                        <span>{{equipamento.valor | currency:'BRL':true}}</span>
                     </li>
                     <li class="list-group-item">
                         <b>QRCode: </b>

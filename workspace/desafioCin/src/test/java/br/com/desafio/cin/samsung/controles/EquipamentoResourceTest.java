@@ -89,7 +89,7 @@ public class EquipamentoResourceTest {
 		String url = "/api/equipamento/criar";
 		
 		Equipamento equipamento = new Equipamento(TipoEquipamento.AUTOMOTIVO, 
-				"Fox Xtreme2019", 
+				null, 
 				DateTimeFormatter.ofPattern("MM/yyyy").format(LocalDate.now()), 
 				BigDecimal.valueOf(100000), null);
 		String json = mapper.writeValueAsString(equipamento);

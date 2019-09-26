@@ -4,6 +4,9 @@
              <h3 class="box-title">Formulario de Equipamento</h3>
         </div>
         <form class="form-horizontal" #form="ngForm" (ngSubmit)="save()">
+            <div [ngClass]="classCss" role="alert" *ngIf="menssage != null && menssage.erros > 0">
+                <strong *ngFor="let e of menssage.erros">{{e}}</strong>
+            </div>
             <div [ngClass]="classCss" role="alert" *ngIf="menssage">
                 <strong>{{menssage.text}}</strong>
             </div>
@@ -38,7 +41,7 @@
                 </div>
 
                 <div [ngClass]="getFormGroupClass(mesano.invalid, mesano.dirty)">
-                    <label for="inputMesAno" class="col-sm-4 control-label">Mês / Ano:</label>
+                    <label for="inputMesAno" class="col-sm-4 control-label">Ano/Mês:</label>
                     <div class='input-group date col-sm-5'>
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>
@@ -49,7 +52,6 @@
                             class="form-control pull-right" 
                             id="mesano"
                             name="mesano"
-                            min="1900-01"
                             #mesano="ngModel" required>
                         <span class="help-block" *ngIf="mesano.invalid && mesano.dirty">
                             Mês / Ano está invalido.
